@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="郁帮欣专属生日祝福 - 愿你前程似锦，高考必胜" />
+    <title>郁帮欣 | 生日快乐 & 高考必胜</title>
+    
+    <!-- 引入 React 和 Tailwind -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind 配置 -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              rose: {
+                50: '#fff1f2',
+                100: '#ffe4e6',
+                200: '#fecdd3',
+                300: '#fda4af',
+                400: '#fb7185',
+                500: '#f43f5e',
+                600: '#e11d48',
+                700: '#be123c',
+                800: '#9f1239',
+                900: '#881337',
+              },
+              gold: {
+                100: '#f9f1d8',
+                200: '#f0e0aa',
+                300: '#e6cc76',
+                400: '#dcb848',
+                500: '#d4a528',
+              }
+            },
+            fontFamily: {
+              'serif': ['"Noto Serif SC"', 'serif'],
+              'sans': ['"Noto Sans SC"', 'sans-serif'],
+              'handwriting': ['"Ma Shan Zheng"', 'cursive'],
+            },
+            animation: {
+              'float': 'float 8s ease-in-out infinite',
+              'float-delayed': 'float 8s ease-in-out infinite 4s',
+              'fade-in-up': 'fadeInUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+              'shine': 'shine 4s linear infinite',
+              'seal-appear': 'sealAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+              'spin-slow': 'spin 12s linear infinite',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(40px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              shine: {
+                '0%': { backgroundPosition: '200% center' },
+                '100%': { backgroundPosition: '-200% center' },
+              },
+              sealAppear: {
+                '0%': { transform: 'scale(2) rotate(20deg)', opacity: '0' },
+                '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' },
+              }
+            },
+          },
+        },
+      }
+    </script>
+
+    <style>
+      body {
+        font-family: 'Noto Sans SC', sans-serif;
+        overflow-x: hidden;
+        background-color: #fffafb;
+        margin: 0;
+      }
+      
+      /* 噪点纹理 - 电影质感 */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* 玻璃拟态卡片 */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 40px -10px rgba(225, 29, 72, 0.05);
+      }
+      
+      /* 纸张质感 */
+      .paper-texture {
+        background-color: #fffdf9;
+        background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3h1v1H1V3zm2-2h1v1H3V1z' fill='%23a8a29e' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        box-shadow: 
+          0 1px 1px rgba(0,0,0,0.05), 
+          0 10px 0 -5px #fffdf9, 
+          0 10px 1px -4px rgba(0,0,0,0.05),
+          0 20px 0 -10px #fffdf9,
+          0 20px 1px -9px rgba(0,0,0,0.05);
+      }
+
+      /* 火漆印章 */
+      .wax-seal {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle at 30% 30%, #e11d48, #9f1239);
+        border-radius: 50%;
+        box-shadow: 
+          inset 2px 2px 6px rgba(255,255,255,0.3),
+          inset -2px -2px 6px rgba(0,0,0,0.4),
+          3px 6px 12px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #be123c;
+      }
+      
+      /* 流光文字 */
+      .text-shine {
+        background: linear-gradient(to right, #9f1239 0%, #fb7185 20%, #f43f5e 40%, #fb7185 60%, #9f1239 100%);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: shine 6s linear infinite;
+      }
+      
+      ::-webkit-scrollbar { width: 0px; background: transparent; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- 粒子背景 ---
+        const Particles = () => {
+          const canvasRef = useRef(null);
+
+          useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let particles = [];
+            let animationFrameId;
+
+            const resize = () => {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+            };
+
+            const createParticles = () => {
+              const particleCount = 40;
+              for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * canvas.height,
+                  vx: (Math.random() - 0.5) * 0.3,
+                  vy: (Math.random() - 0.5) * 0.3,
+                  size: Math.random() * 3 + 1,
+                  alpha: Math.random() * 0.4 + 0.1,
+                  color: Math.random() > 0.5 ? '255, 228, 230' : '254, 243, 199' 
+                });
+              }
+            };
+
+            const draw = () => {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                ctx.fill();
+              });
+              animationFrameId = requestAnimationFrame(draw);
+            };
+
+            resize();
+            createParticles();
+            draw();
+            window.addEventListener('resize', resize);
+            return () => {
+              window.removeEventListener('resize', resize);
+              cancelAnimationFrame(animationFrameId);
+            };
+          }, []);
+
+          return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" />;
+        };
+
+        // --- 开场动画 ---
+        const Intro = ({ onComplete }) => {
+          const [stage, setStage] = useState(0);
+
+          useEffect(() => {
+            const timers = [
+              setTimeout(() => setStage(1), 500),
+              setTimeout(() => setStage(2), 2500),
+              setTimeout(() => setStage(3), 4500),
+              setTimeout(onComplete, 6500)
+            ];
+            return () => timers.forEach(clearTimeout);
+          }, [onComplete]);
+
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fffafb] overflow-hidden">
+              <div className="relative w-full h-full flex flex-col items-center justify-center">
+                <div className={`absolute top-1/4 left-1/4 w-96 h-96 bg-rose-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-0 transition-opacity duration-1000 ${stage >= 0 ? 'opacity-100' : ''} animate-float`}></div>
+                <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-0 transition-opacity duration-1000 delay-500 ${stage >= 0 ? 'opacity-100' : ''} animate-float`}></div>
+
+                <div className="text-center z-10 px-4">
+                  <h1 className={`serif text-3xl md:text-5xl text-rose-900 mb-6 transition-all duration-1000 transform ${stage === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} ${stage > 1 ? 'opacity-0 -translate-y-10' : ''}`}>
+                    特别的日子
+                  </h1>
+                  <h1 className={`serif text-4xl md:text-6xl text-rose-900 font-bold mb-6 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full transition-all duration-1000 transform ${stage === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'} ${stage > 2 ? 'opacity-0 scale-110' : ''}`}>
+                    致 郁帮欣
+                  </h1>
+                  <h1 className={`serif text-5xl md:text-8xl text-rose-600 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full transition-all duration-1000 transform ${stage === 3 ? 'opacity-100 scale-100' : 'opacity-0 scale-110'}`}>
+                    生日快乐
+                  </h1>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // --- 寄语卡片 ---
+        const Encouragement = () => {
+          const cards = [
+            {
+              title: "沉着",
+              subtitle: "CALM",
+              icon: "🌊",
+              content: "在分秒必争的备考时光里，愿你拥有一颗如静水深流般的心。乾坤未定，你我皆是黑马；执笔为剑，定能披荆斩棘。",
+              gradient: "from-rose-50 to-white"
+            },
+            {
+              title: "欢愉",
+              subtitle: "JOY",
+              icon: "🎂",
+              content: "十八岁不仅是成年的序章，更是值得庆祝的当下。今天请暂时放下试卷，吃一口甜甜的蛋糕，许一个关于未来的愿望。",
+              gradient: "from-gold-100/50 to-white"
+            },
+            {
+              title: "远方",
+              subtitle: "FUTURE",
+              icon: "✨",
+              content: "六月的风会吹散所有的疲惫。愿你在这个夏天，合上笔盖的那一刻，有着侠客收剑入鞘的骄傲。金榜题名，前程似锦。",
+              gradient: "from-rose-50 to-white"
+            },
+          ];
+
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
+              {cards.map((card, index) => (
+                <div 
+                  key={index}
+                  className="group relative glass-card p-8 rounded-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl opacity-0 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-50 rounded-2xl`}></div>
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-6">
+                      <span className="text-xs font-bold tracking-[0.2em] text-rose-400 uppercase">{card.subtitle}</span>
+                      <span className="text-3xl filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:rotate-12">{card.icon}</span>
+                    </div>
+                    <h3 className="text-2xl serif text-rose-900 mb-4 font-bold flex items-center gap-2">
+                      {card.title}
+                      <span className="h-[1px] flex-grow bg-rose-200"></span>
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed font-light text-justify text-sm md:text-base">
+                      {card.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        };
+
+        // --- 手写信 ---
+        const Letter = () => {
+          const [isVisible, setIsVisible] = useState(false);
+          const letterRef = useRef(null);
+
+          useEffect(() => {
+            const observer = new IntersectionObserver(
+              ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+              { threshold: 0.1 }
+            );
+            if (letterRef.current) observer.observe(letterRef.current);
+            return () => observer.disconnect();
+          }, []);
+
+          return (
+            <div ref={letterRef} className={`w-full max-w-2xl mx-auto px-4 py-20 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+              <div className="relative paper-texture p-6 md:p-12 lg:p-16 transform transition-transform duration-500 md:rotate-1 hover:rotate-0">
+                {/* 火漆印章 */}
+                <div className="absolute top-6 right-6 md:top-10 md:right-10 z-20 animate-seal-appear wax-seal">
+                  <span className="text-rose-100 font-handwriting text-4xl mt-1 drop-shadow-md">欣</span>
+                </div>
+
+                <div className="relative z-10 border border-rose-900/10 p-6 md:p-10 h-full">
+                  <div className="flex justify-between items-end mb-10 border-b border-rose-100 pb-4">
+                    <h2 className="serif text-xl md:text-2xl text-rose-900 font-bold tracking-widest">
+                      致 追光的女孩
+                    </h2>
+                    <span className="text-xs text-rose-300 tracking-widest uppercase hidden md:block">To: Yu Bangxin</span>
+                  </div>
+
+                  <div className="serif text-gray-700 text-base md:text-lg leading-[2.2] space-y-6 text-justify">
+                    <p><span className="font-bold text-rose-900">亲爱的郁帮欣同学：</span></p>
+                    <p>见字如面，生日快乐。</p>
+                    <p>站在十八岁的门槛上，或许你此刻正埋首于书山题海。备考的日子注定是孤独的，就像在黑屋子里洗衣服，虽然看不见，但你一遍又一遍地搓洗，终会洗去尘埃，迎来光亮。</p>
+                    <p>你的名字，本就藏着这世间最好的祝愿：</p>
+                    <div className="pl-4 border-l-2 border-rose-200 space-y-2 py-2 my-2 bg-white/40 italic">
+                      <p><span className="text-rose-600 font-medium">“郁”</span> 是葱茏蓬勃的生命力，风雨中也要倔强生长；</p>
+                      <p><span className="text-rose-600 font-medium">“帮”</span> 是既能温暖他人，亦能自助渡劫的坚韧；</p>
+                      <p><span className="text-rose-600 font-medium">“欣”</span> 是欣欣向荣，向着阳光，野蛮生长。</p>
+                    </div>
+                    <p>愿你眼中有光，脚下有路。愿六月的风吹来皆是喜讯，金榜题名，得偿所愿！</p>
+                  </div>
+
+                  <div className="mt-16 flex flex-col items-end">
+                    <div className="transform -rotate-2">
+                      <p className="handwriting text-3xl md:text-4xl text-rose-600 mb-2">生日快乐，高考必胜！</p>
+                      <div className="w-full h-1 bg-rose-200/50 rounded-full"></div>
+                    </div>
+                    <p className="mt-4 text-xs text-rose-400 uppercase tracking-widest">2024 · 夏</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // --- 主程序 ---
+        const App = () => {
+          const [showMain, setShowMain] = useState(false);
+
+          return (
+            <div className="min-h-screen w-full relative">
+              {!showMain ? (
+                <Intro onComplete={() => setShowMain(true)} />
+              ) : (
+                <>
+                  <Particles />
+                  <main className="relative z-10 w-full flex flex-col items-center">
+                    
+                    {/* Hero 区域 */}
+                    <header className="min-h-[90vh] w-full flex flex-col items-center justify-center text-center px-4 relative">
+                      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <div className="absolute top-[10%] right-[10%] w-[400px] h-[400px] bg-rose-200/30 rounded-full blur-[100px] animate-float"></div>
+                        <div className="absolute bottom-[10%] left-[10%] w-[300px] h-[300px] bg-gold-200/20 rounded-full blur-[80px] animate-float-delayed"></div>
+                      </div>
+
+                      <div className="space-y-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                        <div className="inline-block px-4 py-1.5 rounded-full border border-rose-200/60 bg-white/40 backdrop-blur-md text-rose-800/70 text-xs tracking-[0.3em] font-medium uppercase shadow-sm">
+                          Distance to Dream: Getting Closer
+                        </div>
+                        
+                        <div className="relative py-4">
+                          <h2 className="text-rose-400 font-serif italic text-xl md:text-3xl mb-2">Happy 18th Birthday</h2>
+                          <h1 className="serif text-5xl md:text-8xl lg:text-9xl font-bold text-shine drop-shadow-sm tracking-tight leading-tight py-2">
+                            郁帮欣
+                          </h1>
+                        </div>
+
+                        <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-light serif max-w-lg mx-auto">
+                          愿你的青春如名字般<br/>
+                          拥有<span className="text-rose-600 font-medium border-b border-rose-200 mx-1">郁郁葱葱</span>的生命力<br/>
+                          奔赴一个<span className="text-rose-600 font-medium border-b border-rose-200 mx-1">欣欣向荣</span>的前程
+                        </p>
+                      </div>
+
+                      <div className="absolute bottom-10 animate-bounce text-rose-300">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                      </div>
+                    </header>
+
+                    {/* 内容区域 */}
+                    <div className="bg-gradient-to-b from-transparent via-rose-50/30 to-transparent py-20 w-full">
+                      <div className="flex items-center justify-center gap-4 mb-20 opacity-80">
+                         <div className="h-[1px] w-12 bg-rose-200"></div>
+                         <h2 className="text-2xl serif text-rose-900 font-medium">时光寄语</h2>
+                         <div className="h-[1px] w-12 bg-rose-200"></div>
+                      </div>
+                      <Encouragement />
+                      <Letter />
+                    </div>
+
+                    <footer className="w-full py-12 text-center text-rose-900/40 border-t border-rose-100/50 bg-white/40 backdrop-blur-sm">
+                      <p className="serif text-sm tracking-widest mb-2">愿六月风起 · 传来佳音</p>
+                      <p className="text-xs font-light">© 2024 For Yu Bangxin</p>
+                    </footer>
+                  </main>
+                </>
+              )}
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
